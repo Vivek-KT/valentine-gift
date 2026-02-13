@@ -5,7 +5,9 @@ import './App.css'
 
 function App() {
   const [noPressed, setNoPressed] = useState(false);
+  const [continuepressed, setcontinuePressed] = useState(false);
   const [yesBtnPosition, setYesBtnPosition] = useState({});
+  const [selectedMessage, setSelectedMessage] = useState(null);
 
   // Floating hearts generation
   const [hearts, setHearts] = useState([]);
@@ -50,6 +52,19 @@ function App() {
   const handleNoClick = () => {
     setNoPressed(true);
   };
+  const handleImageClick = () => {
+    // Open the image in a new tab when clicked
+    setcontinuePressed(true);
+  };
+
+  const messages = [
+    { id: 1, text: "Every moment with you is precious 💕", emoji: "✨", image: "./src/assets/momentwithyou.jpg" },
+    { id: 2, text: "You make my heart skip a beat 💓", emoji: "💓", image: "./src/assets/heartbeats.JPG" },
+    { id: 3, text: "Falling for you more each day 🌹", emoji: "🌹", image: "./src/assets/fallforyou.JPG" },
+    { id: 4, text: "You're my favorite adventure 🗺️", emoji: "🗺️", image: "./src/assets/favourite.JPG" },
+    { id: 5, text: "Life is beautiful with you 🌟", emoji: "🌟", image: "./src/assets/lifehappy.JPG" },
+    { id: 6, text: "You're my happy place 🏠", emoji: "🏠", image: "./src/assets/house.JPG" }
+  ];
 
   useEffect(() => {
     if (noPressed) {
@@ -101,20 +116,50 @@ function App() {
       </div>
 
       {noPressed ? (
-        <div className="card success-container">
-          <h1 className="success-title">April Fool!!! 😂🤣</h1>
-          <h3 className="subtext">Indha twist epadi iruku 🤣</h3>
-          <video
-            className="success-video"
-            controls
-            autoPlay
-            playsInline
-            src={videoFile}
-            style={{ width: '800px', maxWidth: '100%', borderRadius: '16px', marginTop: '20px' }}
-          >
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        continuepressed ? (
+          <div className="card listing-container">
+            <h1 className="title">💝 Reasons Why I Love You 💝</h1>
+            <p className="subtext">Here are some of my favorite things about you...</p>
+            <div className="messages-grid">
+              {messages.map((msg) => (
+                <div key={msg.id} className="message-card">
+                  <div 
+                    className="message-emoji"
+                    onClick={() => setSelectedMessage(msg)}
+                  >
+                    {msg.emoji}
+                  </div>
+                  <p className="message-text">{msg.text}</p>
+                </div>
+              ))}
+            </div>
+            <button 
+              className="btn yes-btn"
+              onClick={() => window.location.reload()}
+            >
+              Start Over
+            </button>
+          </div>
+        ) : (
+          <div className="card success-container">
+            <h1 className="success-title">Adiye Venna mavale !!! 😂🤣</h1>
+            <h3 className="subtext">Indha twist epadi iruku 🤣</h3>
+            <div className="message-card"><span  className="highlight-new">Do you want to continue with our memory ! </span><button
+                className="btn yes-btn"              
+                onClick={handleImageClick}
+              >Yes</button></div>
+            <video
+              className="success-video"
+              controls
+              autoPlay
+              playsInline
+              src={videoFile}
+              style={{ width: '800px', maxWidth: '100%', borderRadius: '16px', marginTop: '20px' }}
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )
       ) : (
         <div className="card">
           <h1 className="title">
@@ -141,6 +186,22 @@ function App() {
             >
               NO
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Image Modal */}
+      {selectedMessage && (
+        <div className="modal-overlay" onClick={() => setSelectedMessage(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close"
+              onClick={() => setSelectedMessage(null)}
+            >
+              ✕
+            </button>
+            <img src={selectedMessage.image} alt={selectedMessage.text} className="modal-image" />
+            <h2 className="modal-text">{selectedMessage.text}</h2>
           </div>
         </div>
       )}
